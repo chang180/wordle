@@ -9,25 +9,29 @@
     {{-- @vite('/resources/css/app.css') --}}
     @vite(['/resources/js/app.js', '/resources/css/app.css'])
     <script src="//unpkg.com/alpinejs" defer></script>
-    {{-- <link rel="stylesheet" href="/resources/css/app.css">
+    {{--
+    <link rel="stylesheet" href="/resources/css/app.css">
     <script src="/resources/js/app.js"></script> --}}
 </head>
 
 <body>
-
-    <div id="game" x-data="game"
-    @keyup.window="onKeyPress($event.key)"
+    <main
+        x-data="game" 
+        @keyup.window="onKeyPress($event.key)"
     >
-        <template x-for="row in board">
-            <div class="row">
-                <template x-for="tile in row">
-                    <div class="tile" x-text="tile.letter">
-                    </div>
-                </template>
-            </div>
-        </template>
-    </div>
+        <div id="game">
+            <template x-for="row in board">
+                <div class="row">
+                    <template x-for="tile in row">
+                        <div class="tile" x-text="tile.letter">
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
 
+        <output x-text="message"></output>
+    </main>
 </body>
 
 </html>
