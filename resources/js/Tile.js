@@ -1,12 +1,12 @@
-export default class Tile{
-    letter = '';
-    status = '';
+export default class Tile {
+    letter = "";
+    status = "";
 
-    fill(key){
+    fill(key) {
         this.letter = key.toLowerCase();
     }
 
-    empty(){
-        this.letter = '';
+    empty() {
+        this.letter = "";
     }
 }
