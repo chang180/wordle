@@ -4,11 +4,19 @@ export default {
     guessesAllowed: 3,
     theWord: 'cat',
     currentRowIndex: 0,
-    state : 'active', // pending, active, complete
+    state: 'active', // pending, active, complete
     message: '',
+
+    get currentRow() {
+        return this.board[this.currentRowIndex]
+    },
 
     get currentGuess() {
         return this.currentRow.map(tile => tile.letter).join('');
+    },
+
+    get remainingGuesses() {
+        return this.guessesAllowed - this.currentRowIndex;
     },
 
     init() {
@@ -20,59 +28,55 @@ export default {
     onKeyPress(key) {
         if (/^[A-z]$/.test(key)) {
             this.fillTile(key)
+        } else if (key === 'Backspace') {
+            this.emptyTile()
         } else if (key === 'Enter') {
             this.submitGuess()
         }
     },
 
-    fillTile(key) {
-        this.message = ''
+    emptyTile() {
+        for (let tile of [...this.currentRow].reverse()) {
+            if (tile.letter) {
+                tile.empty()
+                break;
+            }
+        }
+    },
 
+    fillTile(key) {
         for (let tile of this.currentRow) {
             if (!tile.letter) {
                 tile.fill(key)
                 break;
             }
         }
-
-    },
-
-    get currentRow() {
-        return this.board[this.currentRowIndex]
     },
 
     submitGuess() {
-        let guess = this.currentGuess
-
-        if (guess.length < this.theWord.length) {
+        if (this.currentGuess.length < this.theWord.length) {
             return;
         }
 
         // update the tile colors
-        this.refreshTileStatusForCurrentRow()
-
-        if (guess === this.theWord) {
-            this.message = 'You win!'
-        } else if (this.guessesAllowed === this.currentRowIndex + 1) {
-            this.message = 'You lose!'
-            this.state = 'complete'
-        } else {
-            this.message  = 'Incorrect'
-            this.currentRowIndex++
+        for (let tile of this.currentRow) {
+            tile.updateStatus(this.currentGuess, this.theWord)
         }
 
-    },
+        if (this.currentGuess === this.theWord) {
+            this.state = 'complete'
+            return this.message = 'You win!'
+        }
 
-    refreshTileStatusForCurrentRow() {
-        Object.keys(this.currentRow).forEach((index) => {
-            let tile = this.currentRow[index]
+        if (this.remainingGuesses === 0) {
+            this.message = 'You lose!'
+            return this.state = 'complete'
+        }
 
-            tile.status = (this.theWord.includes(tile.letter)) ? 'present' : 'absent'
-            
-            if (tile.letter === this.theWord[index]) {  
-                tile.status = 'correct'
-            } 
-        })
+        this.currentRowIndex++
+
+        return this.message = 'Incorrect'
+
     },
 
 }
