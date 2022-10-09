@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>TryCat</title>
+    <title>Wordle</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+
     {{-- @vite('/resources/css/app.css') --}}
     @vite(['/resources/js/app.js', '/resources/css/app.css'])
     <script src="//unpkg.com/alpinejs" defer></script>
@@ -15,13 +20,13 @@
 </head>
 
 <body>
-    <main
-        x-data="game" 
-        @keyup.window="onKeyPress($event.key)"
-    >
+    <main x-data="game" @keyup.window="onKeyPress($event.key)">
+        <h1 aria-label="Wordle" class="svg_img">
+            <img src="{{ asset('images/wordle.svg') }}">
+        </h1>
         <div id="game">
-            <template x-for="row in board">
-                <div class="row">
+            <template x-for="(row, index) in board">
+                <div class="row" :class="{'current' : currentRowIndex === index}">
                     <template x-for="tile in row">
                         <div class="tile" :class="tile.status" x-text="tile.letter">
                         </div>
