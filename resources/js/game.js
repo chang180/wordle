@@ -1,4 +1,5 @@
 import Tile from './Tile.js'
+import words from './words.js';
 
 export default {
     guessesAllowed: 3,
@@ -6,6 +7,7 @@ export default {
     currentRowIndex: 0,
     state: 'active', // pending, active, complete
     message: '',
+    errors: false,
 
     get currentRow() {
         return this.board[this.currentRowIndex]
@@ -26,6 +28,8 @@ export default {
     },
 
     onKeyPress(key) {
+        this.erroes = false
+
         if (/^[A-z]$/.test(key)) {
             this.fillTile(key)
         } else if (key === 'Backspace') {
@@ -57,6 +61,16 @@ export default {
         if (this.currentGuess.length < this.theWord.length) {
             return;
         }
+
+        if (! words.includes(this.currentGuess.toUpperCase())) {
+            this.errors = true
+            this.message = 'Invalid word...'
+        }
+        
+        // if(! await this.checkDictionary(this.currentGuess)){
+        //     this.errors = true
+        //     this.message = 'Invalid word...'
+        // }
 
         // update the tile colors
         for (let tile of this.currentRow) {
