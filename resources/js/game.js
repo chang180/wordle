@@ -1,4 +1,4 @@
-import Tile from './Tile.js'
+import Tile from './Tile.js';
 import words from './words.js';
 
 export default {
@@ -23,7 +23,7 @@ export default {
 
     init() {
         this.board = Array.from({ length: this.guessesAllowed }, () => {
-            return Array.from({ length: this.theWord.length }, () => new Tile)
+            return Array.from({ length: this.theWord.length }, (item, index) => new Tile(index))
         })
     },
 
@@ -67,15 +67,11 @@ export default {
             this.message = 'Invalid word...'
         }
         
-        // if(! await this.checkDictionary(this.currentGuess)){
-        //     this.errors = true
-        //     this.message = 'Invalid word...'
-        // }
-
-        // update the tile colors
         for (let tile of this.currentRow) {
-            tile.updateStatus(this.currentGuess, this.theWord)
+            tile.updateStatus(this.theWord)
         }
+
+        Tile.updateStatusesForRow(this.currentRow, this.theWord)
 
         if (this.currentGuess === this.theWord) {
             this.state = 'complete'
